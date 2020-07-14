@@ -4,10 +4,17 @@ import ProductOverViewScreen,{ScreenOptions as ProductOptions} from '../screens/
 import Colors from '../constans/Colors';
 import { Platform } from 'react-native'
 import { NavigationContainer } from "@react-navigation/native";
+import ProductDetailScreen,{ScreenOptions as ProductDetailScreenOptions} from '../screens/shop/ProductDetailScreen';
 
 const defaultNvOptions = {
     headerStyle: {
       backgroundColor: Platform.OS === "android" ? Colors.primary : "",
+    },
+    headerTitleStyle:{
+      fontFamily:'open-sans-bold'
+    },
+    headerBackTitleStyle:{
+      fontFamily:'open-sans'
     },
     headerTintColor: Platform.OS === "android" ? "white" : Colors.primary,
   };
@@ -21,6 +28,11 @@ export const ProductNavigator = () =>{
              name="ProductOverview"
              component={ProductOverViewScreen}
              options={ProductOptions}
+            />
+            <ProdutStackNavigator.Screen 
+             name="ProductDetail"
+             component={ProductDetailScreen}
+             options={ProductDetailScreenOptions}
             />
         </ProdutStackNavigator.Navigator>
     )
