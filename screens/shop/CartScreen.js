@@ -16,7 +16,7 @@ const CartScreen = (props) => {
             <Text>Cart Items</Text>
       </View>
     </View>
-  );
+  ); 
 };
 
 const styles = StyleSheet.create({});
