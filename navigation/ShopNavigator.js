@@ -5,7 +5,7 @@ import Colors from '../constans/Colors';
 import { Platform } from 'react-native'
 import { NavigationContainer } from "@react-navigation/native";
 import ProductDetailScreen,{ScreenOptions as ProductDetailScreenOptions} from '../screens/shop/ProductDetailScreen';
-import CartScreen from '../screens/shop/CartScreen';
+import CartScreen,{ScreenOptions as CartScreenOption} from '../screens/shop/CartScreen';
 const defaultNvOptions = {
     headerStyle: {
       backgroundColor: Platform.OS === "android" ? Colors.primary : "",
@@ -37,6 +37,7 @@ export const ProductNavigator = () =>{
             <ProdutStackNavigator.Screen 
              name="CartScreen"
              component={CartScreen}
+             options={CartScreenOption}
             />
         </ProdutStackNavigator.Navigator>
     )
