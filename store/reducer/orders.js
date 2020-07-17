@@ -14,10 +14,10 @@ export default (state = intialState,action) =>{
                action.orderData.amount,
                new Date()
            )
-           console.log({
+           return{
                ...state,
                orders:state.orders.concat(newOrder)
-           })
+           }
     }  
     return state
 }
