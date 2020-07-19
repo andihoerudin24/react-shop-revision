@@ -16,7 +16,7 @@ const ProductDetailScreen = (props) => {
     state.products.avaliableProducts.find((prod) => prod.id === productId)
   );
   const itemreducer = useSelector(state => state.cart.items)
-  console.log(itemreducer)
+  //console.log(itemreducer)
   const dispatch = useDispatch() 
   return (
     <ScrollView>
