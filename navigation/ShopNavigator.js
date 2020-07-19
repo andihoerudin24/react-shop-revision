@@ -16,6 +16,7 @@ import OrderScreen, {
   ScreenOptions as OrderScreenOptions,
 } from "../screens/shop/OrderScreens";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import UserProductScreen,{ScreenOptions} from '../screens/user/UserProductScreen'
 import { Ionicons } from "@expo/vector-icons";
 
 const defaultNvOptions = {
@@ -67,6 +68,19 @@ export const OrdersNavigator = () => {
   );
 };
 
+const UserProductStackNavigator = createStackNavigator();
+export const AdminNavigator = () => {
+  return (
+    <UserProductStackNavigator.Navigator screenOptions={defaultNvOptions}>
+      <UserProductStackNavigator.Screen
+        name="Admin"
+        component={UserProductScreen}
+        options={ScreenOptions}
+      />
+    </UserProductStackNavigator.Navigator>
+  );
+};
+
 const ShopDrawerNavigator = createDrawerNavigator();
 export const ShopNavigation = () => {
   return (
@@ -95,6 +109,19 @@ export const ShopNavigation = () => {
           drawerIcon: (props) => (
             <Ionicons
               name={Platform.OS === "android" ? "md-list" : "ios-list"}
+              size={23}
+              color={props.color}
+            />
+          ),
+        }}
+      />
+      <ShopDrawerNavigator.Screen
+        name="Admin"
+        component={AdminNavigator}
+        options={{
+          drawerIcon: (props) => (
+            <Ionicons
+              name={Platform.OS === "android" ? "md-create" : "ios-create"}
               size={23}
               color={props.color}
             />
