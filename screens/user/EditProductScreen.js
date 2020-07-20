@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,12 +6,20 @@ import {
   TextInput,
   ScrollView,
   Platform,
+  YellowBox,
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/UI/HeaderButton";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { CommonActions } from "@react-navigation/native";
+import * as productsAction from "../../store/actions/products";
+
+YellowBox.ignoreWarnings([
+  "Non-serializable values were found in the navigation state",
+]);
 
 const EditProductScreen = (props) => {
+  const dispatch = useDispatch();
   const productId = props.route.params ? props.route.params.productId : "";
   const Editedproduct = useSelector((state) =>
     state.products.userProducts.find((prod) => prod.id === productId)
@@ -21,10 +29,25 @@ const EditProductScreen = (props) => {
   const [imageUrl, setImageUrl] = useState(
     Editedproduct ? Editedproduct.imageUrl : ""
   );
-  const [price, setPrice] = useState(Editedproduct ? Editedproduct.price : "");
+  const [price, setPrice] = useState('');
   const [description, setDescription] = useState(
     Editedproduct ? Editedproduct.description : ""
   );
+
+  const submitHandler = useCallback(() => {
+     if(Editedproduct){
+       dispatch(productsAction.updateProduct(productId,title,description,imageUrl))
+     }else{
+       dispatch(productsAction.createProduct(title,description,imageUrl, +price))
+     }
+  }, [dispatch, productId, title, description, imageUrl, price]);
+   
+  //console.log(price)
+  useEffect(() => {
+    props.navigation.dispatch(
+      CommonActions.setParams({ submit: submitHandler })
+    );
+  }, [submitHandler]);
 
   return (
     <ScrollView>
@@ -51,6 +74,7 @@ const EditProductScreen = (props) => {
             <TextInput
               style={styles.input}
               value={price}
+              keyboardType='decimal-pad'
               onChangeText={(text) => setPrice(text)}
             />
           </View>
@@ -68,6 +92,8 @@ const EditProductScreen = (props) => {
   );
 };
 export const ScreenOptions = (navData) => {
+  const submitFn = navData.route.params?.submit ?? {};
+  //console.log(submitFn);
   const param = navData.route.params?.productId ?? {};
   return {
     headerTitle: Object.keys(param).length > 0 ? "Edit Product" : "Add Product",
@@ -79,7 +105,7 @@ export const ScreenOptions = (navData) => {
             iconName={
               Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"
             }
-            onPress={() => {}}
+            onPress={submitFn}
           />
         </HeaderButtons>
       );
