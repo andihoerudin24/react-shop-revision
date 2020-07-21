@@ -24,6 +24,7 @@ export const createProduct = (title, description, imageUrl, price) => {
 };
 
 export const updateProduct = (id, title, description, imageUrl) => {
+  //console.log(id,title)
   return {
     type: UPDATE_PRODUCT,
     pid: id,
