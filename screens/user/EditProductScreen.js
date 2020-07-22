@@ -8,6 +8,7 @@ import {
   Platform,
   YellowBox,
   Alert,
+  KeyboardAvoidingView
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/UI/HeaderButton";
@@ -25,7 +26,6 @@ const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
 const formReducer = (state, action) => {
   if (action.type === FORM_INPUT_UPDATE) {
-    //console.log(action.value)
     const updatedValues = {
       ...state.inputValues,
       [action.input]: action.value
@@ -71,9 +71,7 @@ const EditProductScreen = (props) => {
     formIsValid: editedProduct ? true : false
   });
 
-
   const submitHandler = useCallback(() => {
-    //console.log('fomr',formState.formIsValid)
     if (!formState.formIsValid) {
       Alert.alert('Wrong input!', 'Please check the errors in the form.', [
         { text: 'Okay' }
@@ -81,7 +79,6 @@ const EditProductScreen = (props) => {
       return;
     }
     if (editedProduct) {
-      console.log('from',formState.inputValue)
       dispatch(
         productsActions.updateProduct(
           prodId,
@@ -137,6 +134,7 @@ const EditProductScreen = (props) => {
 
 
   return (
+    <KeyboardAvoidingView style={{flex:1}} behavior="padding" keyboardVerticalOffset={100}>
     <ScrollView>
       <View style={styles.form}>
         <Input
@@ -182,7 +180,7 @@ const EditProductScreen = (props) => {
           keyboardType="default"
           autoCapitalize="sentences"
           autoCorrect
-          multiline
+          returnKeyType="next"
           numberOfLines={3}
           onInputChange={inputChangeHandler}
           initialValue={editedProduct ? editedProduct.description : ''}
@@ -192,6 +190,7 @@ const EditProductScreen = (props) => {
         />
       </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 export const ScreenOptions = (navData) => {
@@ -208,7 +207,20 @@ export const ScreenOptions = (navData) => {
 const styles = StyleSheet.create({
   form: {
     margin: 20
-  }
+  },
+  formControl: {
+    width: "100%"
+  },
+  input: {
+    paddingHorizontal: 2,
+    paddingVertical: 5,
+    borderBottomColor: "#ccc",
+    borderBottomWidth: 1
+  },
+  label: {
+    fontFamily: 'open-sans-bold',
+    marginVertical: 8
+  },
 });
 
 export default EditProductScreen;

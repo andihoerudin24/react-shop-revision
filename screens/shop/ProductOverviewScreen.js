@@ -1,21 +1,62 @@
-import React from "react";
-import { View, FlatList, Text, Platform, Button } from "react-native";
+import React,{useEffect,useState,useCallback} from "react";
+import { View, FlatList, Text, Platform, Button,ActivityIndicator,StyleSheet } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/UI/HeaderButton";
 import ProductItem from "../../components/shop/ProductItem";
 import * as CartAction from "../../store/actions/cart";
+import * as ProductAction from "../../store/actions/products";
 import Colors from "../../constans/Colors";
+import { isLoading } from "expo-font";
 
 const ProductOverViewScreen = (props) => {
   const products = useSelector((state) => state.products.avaliableProducts);
+  const [loading, setisloading] = useState(false)
   const dispatch = useDispatch();
+  const [errors,setErrors]= useState()  
+  const loadProduct =useCallback(async () => {
+    setErrors(null)
+    setisloading(true)
+    try {
+      await dispatch(ProductAction.fetchProduct()) 
+    } catch (error) {
+       setErrors(error.message)
+    }
+    setisloading(false)
+  },[dispatch,setErrors,setisloading])
+
+  useEffect(() => {
+    loadProduct()
+  },[dispatch,loadProduct])
+  
   const selectItemHandler = (id, title) => {
     props.navigation.navigate("ProductDetail", {
       productId: id,
       productTitle: title,
     });
   };
+  
+  if(loading){
+    return (<View style={styles.centered}>
+      <ActivityIndicator size="large" color={Colors.primary}/>
+    </View>)
+  }
+
+  
+  if(errors){
+    return (<View style={styles.centered}>
+      <Text>{errors}</Text>
+      <Button title="Try Again" color={Colors.primary} onPress={loadProduct}  /> 
+    </View>)
+  }
+
+
+  if(!loading && products.length === 0){
+    return (<View style={styles.centered}>
+      <Text>No Product Found Mybe Start adding some</Text>
+  </View>)
+  }
+
   return (
     <FlatList
       data={products}
@@ -48,6 +89,14 @@ const ProductOverViewScreen = (props) => {
     />
   );
 };
+
+const styles = StyleSheet.create({
+  centered:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center'
+  }
+})
 
 export const ScreenOptions = (navData) => {
   return {
