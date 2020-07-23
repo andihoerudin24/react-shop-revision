@@ -7,14 +7,14 @@ export const UPDATE_PRODUCT = "UPDATE_PRODUCT";
 export const SET_PRODUCT = "SET_PRODUCT";
 
 export const fetchProduct = () => {
-  return async dispatch => {
-    try{
+  return async (dispatch) => {
+    try {
       const response = await fetch(
         "https://shop-revision.firebaseio.com/products.json"
       );
       //console.log(response.json())
-      if(!response.ok){
-         throw new Error('Somethink Went Wrong')
+      if (!response.ok) {
+        throw new Error("Somethink Went Wrong");
       }
       const resData = await response.json();
       const loadedProduct = [];
@@ -35,17 +35,31 @@ export const fetchProduct = () => {
         type: SET_PRODUCT,
         products: loadedProduct,
       });
-    }catch(err){
-      throw err
+    } catch (err) {
+      throw err;
     }
-    
   };
 };
 
 export const deleteProduct = (productId) => {
-  return {
-    type: DELETE_PRODUCT,
-    pid: productId,
+  return async (dispatch) => {
+    const response = await fetch(
+      `https://shop-revision.firebaseio.com/products/${productId}.json`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Somethink Went Wrong!");
+    }
+    dispatch({
+      type: DELETE_PRODUCT,
+      pid: productId,
+    });
   };
 };
 
@@ -81,14 +95,32 @@ export const createProduct = (title, description, imageUrl, price) => {
 };
 
 export const updateProduct = (id, title, description, imageUrl) => {
-  //console.log(id,title)
-  return {
-    type: UPDATE_PRODUCT,
-    pid: id,
-    productData: {
-      title,
-      description,
-      imageUrl,
-    },
+  return async (dispatch) => {
+    const response = await fetch(
+      `https://shop-revision.firebaseio.com/products/${id}.json`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          imageUrl,
+        }),
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Somethink Went Wrong");
+    }
+    dispatch({
+      type: UPDATE_PRODUCT,
+      pid: id,
+      productData: {
+        title,
+        description,
+        imageUrl,
+      },
+    });
   };
 };

@@ -25,10 +25,14 @@ const ProductOverViewScreen = (props) => {
     setisloading(false)
   },[dispatch,setErrors,setisloading])
 
-  useEffect(() => {
-    loadProduct()
-  },[dispatch,loadProduct])
-  
+  useEffect(()=>{
+    const willfocusSub= props.navigation.addListener('focus',()=>{
+      loadProduct()
+    })
+    return willfocusSub
+  },[loadProduct])
+
+
   const selectItemHandler = (id, title) => {
     props.navigation.navigate("ProductDetail", {
       productId: id,
