@@ -12,17 +12,19 @@ import { isLoading } from "expo-font";
 const ProductOverViewScreen = (props) => {
   const products = useSelector((state) => state.products.avaliableProducts);
   const [loading, setisloading] = useState(false)
+  const [refreshing,setisRefreshing]=useState(false)
   const dispatch = useDispatch();
   const [errors,setErrors]= useState()  
+  
   const loadProduct =useCallback(async () => {
     setErrors(null)
-    setisloading(true)
+    setisRefreshing(true)
     try {
       await dispatch(ProductAction.fetchProduct()) 
     } catch (error) {
        setErrors(error.message)
     }
-    setisloading(false)
+    setisRefreshing(false)
   },[dispatch,setErrors,setisloading])
 
   useEffect(()=>{
@@ -31,7 +33,13 @@ const ProductOverViewScreen = (props) => {
     })
     return willfocusSub
   },[loadProduct])
-
+   
+  useEffect(()=>{
+    setisloading(true)
+    loadProduct().then(()=>{
+      setisloading(false)
+    })
+  },[])
 
   const selectItemHandler = (id, title) => {
     props.navigation.navigate("ProductDetail", {
@@ -63,6 +71,8 @@ const ProductOverViewScreen = (props) => {
 
   return (
     <FlatList
+      onRefresh={loadProduct}
+      refreshing={refreshing}
       data={products}
       renderItem={(itemData) => (
         <ProductItem

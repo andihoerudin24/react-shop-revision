@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect,useCallback } from "react";
 import { View, Text, StyleSheet, FlatList, Button,Alert,ActivityIndicator } from "react-native";
 import ProductItem from "../../components/shop/ProductItem";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,11 +7,24 @@ import HeaderButton from "../../components/UI/HeaderButton";
 import Colors from "../../constans/Colors";
 import * as ProductAction from "../../store/actions/products";
 const UserProductScreen = (props) => {
+  
   const userProducts = useSelector((state) => state.products.userProducts);
   const [error,setError]= useState(false);
   const [loading,setisloading]= useState(false);
+  const [errors,setErrors]= useState()  
   const dispatch = useDispatch();
   
+  const loadproduct = useCallback(async()=>{
+    setError(null)
+    setisloading(true)
+    try {
+      await dispatch(ProductAction.fetchProduct())
+    } catch (error) {
+      setErrors(error.message) 
+    }
+    setisloading(false)
+  },[setError,setisloading,dispatch])
+
   const editProductHandler = (id) => {
     props.navigation.navigate("EditProduct", {
       productId: id,
@@ -44,6 +57,12 @@ const UserProductScreen = (props) => {
      }
   },[error])
 
+  useEffect(()=>{
+    const willfocus = props.navigation.addListener('focus',()=>{
+      loadproduct()
+    })
+    return willfocus
+  },[loadproduct])
   
   if(loading){
     return (<View style={styles.centered}>
