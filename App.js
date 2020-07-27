@@ -4,7 +4,8 @@ import {Provider} from 'react-redux'
 import ProductReducer from './store/reducer/products'
 import CartReducer from './store/reducer/cart'
 import OrderReducer from './store/reducer/orders'
-import ShopNavigator from './navigation/ShopNavigator'
+//import ShopNavigator from './navigation/ShopNavigator'
+import AppNavigator from './navigation/AppNavigator'
 import {AppLoading} from 'expo'
 import * as Font from 'expo-font'
 import ReduxThunk from 'redux-thunk'
@@ -33,7 +34,7 @@ export default function App() {
    } 
   return (
     <Provider store={store}>
-      <ShopNavigator/>
+       <AppNavigator />
     </Provider>
   );
 }

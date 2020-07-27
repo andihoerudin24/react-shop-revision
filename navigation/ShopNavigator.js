@@ -18,6 +18,8 @@ import OrderScreen, {
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import UserProductScreen,{ScreenOptions} from '../screens/user/UserProductScreen'
 import EditProductScreen,{ScreenOptions as EditProductScreenOptions} from '../screens/user/EditProductScreen'
+import AuthScreen,{screenOptions as OptionsAuthScreen} from '../screens/user/AuthScreen'
+
 import { Ionicons } from "@expo/vector-icons";
 
 const defaultNvOptions = {
@@ -137,10 +139,21 @@ export const ShopNavigation = () => {
     </ShopDrawerNavigator.Navigator>
   );
 };
-export default ShopNavigator = () => {
+
+
+const AuthStackNavigator = createStackNavigator();
+
+export const AuthNavigator = () =>{
   return (
-    <NavigationContainer>
-      <ShopNavigation />
-    </NavigationContainer>
-  );
-};
+  <AuthStackNavigator.Navigator ScreenOptions={defaultNvOptions}>
+      <AuthStackNavigator.Screen name="Auth" component={AuthScreen} options={OptionsAuthScreen} />
+  </AuthStackNavigator.Navigator>)
+}
+
+// export default ShopNavigator = () => {
+//   return (
+//     <NavigationContainer>
+//       <ShopNavigation />
+//     </NavigationContainer>
+//   );
+// };
