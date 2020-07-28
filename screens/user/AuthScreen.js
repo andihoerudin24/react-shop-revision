@@ -1,4 +1,4 @@
-import React,{useReducer,useCallback} from "react";
+import React, { useReducer, useCallback, useState,useEffect } from "react";
 import {
   View,
   ScrollView,
@@ -6,7 +6,9 @@ import {
   StyleSheet,
   Text,
   Button,
-  Platform
+  Platform,
+  ActivityIndicator,
+  Alert
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
@@ -15,51 +17,79 @@ import Card from "../../components/UI/Card";
 import Colors from "../../constans/Colors";
 import * as AuthActions from "../../store/actions/auth";
 
-
-
-const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
+const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 
 const formReducer = (state, action) => {
-    if (action.type === FORM_INPUT_UPDATE) {
-      const updatedValues = {
-        ...state.inputValues,
-        [action.input]: action.value
-      };
-      const updatedValidities = {
-        ...state.inputValidities,
-        [action.input]: action.isValid
-      };
-      let updatedFormIsValid = true;
-      for (const key in updatedValidities) {
-        updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
-      }
-      return {
-        formIsValid: updatedFormIsValid,
-        inputValidities: updatedValidities,
-        inputValues: updatedValues
-      };
-  
+  if (action.type === FORM_INPUT_UPDATE) {
+    const updatedValues = {
+      ...state.inputValues,
+      [action.input]: action.value,
+    };
+    const updatedValidities = {
+      ...state.inputValidities,
+      [action.input]: action.isValid,
+    };
+    let updatedFormIsValid = true;
+    for (const key in updatedValidities) {
+      updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
     }
-    return state;
-  };
-  
+    return {
+      formIsValid: updatedFormIsValid,
+      inputValidities: updatedValidities,
+      inputValues: updatedValues,
+    };
+  }
+  return state;
+};
 
 const AuthScreen = (props) => {
   const dispatch = useDispatch();
+  const [isSignup, setIsSignup] = useState(false);
+  const [Loading, setIsloading] = useState(false);
+  const [error, setError] = useState();
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
-       email:'',
-       password:''
+      email: "",
+      password: "",
     },
     inputValidities: {
-        email:false,
-        password:false
+      email: false,
+      password: false,
     },
-    formIsValid:  false
+    formIsValid: false,
   });
-  const signupHandler = () => {
-      dispatch(AuthActions.signUp(formState.inputValues.email,
-        formState.inputValues.password))
+
+  useEffect(()=>{
+        if(error){
+          Alert.alert('An Error Occured!', error,[{
+            text:'Okay'
+          }])
+        }
+  },[error])
+
+  const AuthHandler = async () => {
+    let action;
+    if (isSignup) {
+      action = AuthActions.signUp(
+        formState.inputValues.email,
+        formState.inputValues.password
+      );
+    } else {
+      action = AuthActions.Login(
+        formState.inputValues.email,
+        formState.inputValues.password
+      );
+    }
+    setError(null)
+    setIsloading(true);
+    try{
+      await dispatch(action);
+      props.navigation.navigate("ProductOverview");
+      //console.log('sukses')
+    }catch (err){
+      setError(err.message)
+    }
+    setIsloading(false);
   };
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
@@ -67,7 +97,7 @@ const AuthScreen = (props) => {
         type: FORM_INPUT_UPDATE,
         value: inputValue,
         isValid: inputValidity,
-        input: inputIdentifier
+        input: inputIdentifier,
       });
     },
     [dispatchFormState]
@@ -106,13 +136,23 @@ const AuthScreen = (props) => {
               initialValue=""
             />
             <View style={styles.buttonContainer}>
-              <Button title="Login" color={Colors.primary} onPress={signupHandler} />
+              {Loading ? (
+                <ActivityIndicator size="small" color={Colors.primary} />
+              ) : (
+                <Button
+                  title={isSignup ? "Sign Up" : "Login"}
+                  color={Colors.primary}
+                  onPress={AuthHandler}
+                />
+              )}
             </View>
-            <View>
+            <View style={styles.buttonContainer}>
               <Button
-                title="Sign Up"
+                title={`Switch to ${isSignup ? "Login" : "Sign Up"}`}
                 color={Colors.accent}
-                onPress={signupHandler}
+                onPress={() => {
+                  setIsSignup((prevState) => !prevState);
+                }}
                 style={styles.buttonContainer}
               />
             </View>
@@ -123,9 +163,10 @@ const AuthScreen = (props) => {
   );
 };
 
-export const screenOptions = {
-  headerTitle: "Authenticated",
-  headerTintColor: Platform.OS == 'ios' ? Colors.primary : ''
+export const screenOptions = (navData) => {
+  return {
+    headerTitle: "Authenticated",
+  };
 };
 
 const styles = StyleSheet.create({

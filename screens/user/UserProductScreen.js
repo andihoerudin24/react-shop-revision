@@ -50,12 +50,12 @@ const UserProductScreen = (props) => {
   }
 
   useEffect(()=>{
-     if(error){
-       Alert.alert('error',error,[{
+     if(errors){
+       Alert.alert('error',errors,[{
          text:'Okay'
        }])
      }
-  },[error])
+  },[errors])
 
   useEffect(()=>{
     const willfocus = props.navigation.addListener('focus',()=>{
@@ -68,6 +68,14 @@ const UserProductScreen = (props) => {
     return (<View style={styles.centered}>
       <ActivityIndicator size="large" color={Colors.primary}/>
     </View>)
+  }
+
+  if(userProducts.length === 0){
+    return(
+      <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+        <Text>NO Product Found</Text>
+      </View>
+    )
   }
 
 

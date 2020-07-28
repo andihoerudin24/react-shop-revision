@@ -40,6 +40,11 @@ export const ProductNavigator = () => {
   return (
     <ProdutStackNavigator.Navigator screenOptions={defaultNvOptions}>
       <ProdutStackNavigator.Screen
+        name="AuthNavigator"
+        component={AuthNavigator}
+        //options={ProductOptions}
+      />
+      <ProdutStackNavigator.Screen
         name="ProductOverview"
         component={ProductOverViewScreen}
         options={ProductOptions}
@@ -145,15 +150,15 @@ const AuthStackNavigator = createStackNavigator();
 
 export const AuthNavigator = () =>{
   return (
-  <AuthStackNavigator.Navigator ScreenOptions={defaultNvOptions}>
+  <AuthStackNavigator.Navigator screenOptions={defaultNvOptions}>
       <AuthStackNavigator.Screen name="Auth" component={AuthScreen} options={OptionsAuthScreen} />
   </AuthStackNavigator.Navigator>)
 }
 
-// export default ShopNavigator = () => {
-//   return (
-//     <NavigationContainer>
-//       <ShopNavigation />
-//     </NavigationContainer>
-//   );
-// };
+export default ShopNavigator = () => {
+  return (
+    <NavigationContainer>
+      <ShopNavigation />
+    </NavigationContainer>
+  );
+};

@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
 //import {createStackNavigator} from '@react-navigation/stack'
-import { ShopNavigation,AuthNavigator } from "./ShopNavigator";
+import { ShopNavigation,ProductNavigator } from "./ShopNavigator";
 //import StartupScreen from '../screens/startupScrenn'
 //const MyStack = createStackNavigator();
 
@@ -11,8 +11,8 @@ const AppNavigator = (props) => {
   //const didTryAutoLogin = useSelector((state) => state.auth.didTryAutoLogin);
   return (
     <NavigationContainer>
-      <AuthNavigator />
-      {/* <ShopNavigation /> */}
+      {/* <AuthNavigator /> */}
+      <ProductNavigator />
     </NavigationContainer>
   );
 };

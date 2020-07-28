@@ -2,10 +2,11 @@ import React,{useState} from 'react';
 import {createStore,combineReducers,applyMiddleware} from 'redux'
 import {Provider} from 'react-redux'
 import ProductReducer from './store/reducer/products'
+import authReducer from './store/reducer/auth'
 import CartReducer from './store/reducer/cart'
 import OrderReducer from './store/reducer/orders'
-//import ShopNavigator from './navigation/ShopNavigator'
-import AppNavigator from './navigation/AppNavigator'
+import ShopNavigator from './navigation/ShopNavigator'
+//import AppNavigator from './navigation/AppNavigator'
 import {AppLoading} from 'expo'
 import * as Font from 'expo-font'
 import ReduxThunk from 'redux-thunk'
@@ -13,7 +14,8 @@ import ReduxThunk from 'redux-thunk'
 const rootReducer = combineReducers({
     products:ProductReducer,
     cart    :CartReducer,
-    orders  :OrderReducer  
+    orders  :OrderReducer,
+    auth: authReducer
 })
 
 const store = createStore(rootReducer,applyMiddleware(ReduxThunk))
@@ -34,7 +36,7 @@ export default function App() {
    } 
   return (
     <Provider store={store}>
-       <AppNavigator />
+       <ShopNavigator />
     </Provider>
   );
 }
