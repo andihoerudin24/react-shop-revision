@@ -1,10 +1,12 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import * as authaction from "../store/actions/auth";
+
 import { createStackNavigator } from "@react-navigation/stack";
 import ProductOverViewScreen, {
   ScreenOptions as ProductOptions,
 } from "../screens/shop/ProductOverviewScreen";
 import Colors from "../constans/Colors";
-import { Platform } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import ProductDetailScreen, {
   ScreenOptions as ProductDetailScreenOptions,
@@ -15,12 +17,19 @@ import CartScreen, {
 import OrderScreen, {
   ScreenOptions as OrderScreenOptions,
 } from "../screens/shop/OrderScreens";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import UserProductScreen,{ScreenOptions} from '../screens/user/UserProductScreen'
-import EditProductScreen,{ScreenOptions as EditProductScreenOptions} from '../screens/user/EditProductScreen'
-import AuthScreen,{screenOptions as OptionsAuthScreen} from '../screens/user/AuthScreen'
-
-import { Ionicons } from "@expo/vector-icons";
+import { createDrawerNavigator, DrawerItemList } from "@react-navigation/drawer";
+import UserProductScreen, {
+  ScreenOptions,
+} from "../screens/user/UserProductScreen";
+import EditProductScreen, {
+  ScreenOptions as EditProductScreenOptions,
+} from "../screens/user/EditProductScreen";
+import AuthScreen, {
+  screenOptions as OptionsAuthScreen,
+} from "../screens/user/AuthScreen";
+import StartupScreen from "../screens/StartupScreen";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { Platform, SafeAreaView, Button, View } from "react-native";
 
 const defaultNvOptions = {
   headerStyle: {
@@ -40,9 +49,14 @@ export const ProductNavigator = () => {
   return (
     <ProdutStackNavigator.Navigator screenOptions={defaultNvOptions}>
       <ProdutStackNavigator.Screen
+        name="StartupScreen"
+        component={StartupScreen}
+        //options={ProductOptions}
+      />
+      <ProdutStackNavigator.Screen
         name="AuthNavigator"
         component={AuthNavigator}
-        //options={ProductOptions}
+        options={OptionsAuthScreen}
       />
       <ProdutStackNavigator.Screen
         name="ProductOverview"
@@ -96,11 +110,29 @@ export const AdminNavigator = () => {
 
 const ShopDrawerNavigator = createDrawerNavigator();
 export const ShopNavigation = () => {
+  const dispatch = useDispatch()
   return (
     <ShopDrawerNavigator.Navigator
-      drawerContentOptions={{
-        activeTintColor: Colors.primary,
-      }}
+    drawerContent={(props) => {
+      return (
+        <View style={{ flex: 1, padding: 20 }}>
+          <SafeAreaView forceInset={{ top: "always", horizontal: "never" }}>
+            <DrawerItemList {...props} />
+            <Button
+              title="Logout"
+              color={Colors.primary}
+              onPress={() => {
+                dispatch(authaction.Logout());
+                props.navigation.navigate("AuthNavigator");
+              }}
+            />
+          </SafeAreaView>
+        </View>
+      );
+    }}
+    drawerContentOptions={{
+      activeTintColor: Colors.primary,
+    }}
     >
       <ShopDrawerNavigator.Screen
         name="Product"
@@ -145,15 +177,19 @@ export const ShopNavigation = () => {
   );
 };
 
-
 const AuthStackNavigator = createStackNavigator();
 
-export const AuthNavigator = () =>{
+export const AuthNavigator = () => {
   return (
-  <AuthStackNavigator.Navigator screenOptions={defaultNvOptions}>
-      <AuthStackNavigator.Screen name="Auth" component={AuthScreen} options={OptionsAuthScreen} />
-  </AuthStackNavigator.Navigator>)
-}
+    <AuthStackNavigator.Navigator screenOptions={defaultNvOptions}>
+      <AuthStackNavigator.Screen
+        name="Auth"
+        component={AuthScreen}
+        options={OptionsAuthScreen}
+      />
+    </AuthStackNavigator.Navigator>
+  );
+};
 
 export default ShopNavigator = () => {
   return (

@@ -8,8 +8,10 @@ import {
   Button,
   Platform,
   ActivityIndicator,
-  Alert
+  Alert,
+  BackHandler
 } from "react-native";
+import { useAndroidBackHandler } from "react-navigation-backhandler";
 import { useDispatch } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
 import Input from "../../components/UI/input";
@@ -58,6 +60,18 @@ const AuthScreen = (props) => {
     },
     formIsValid: false,
   });
+
+  const handleBackButtonClick =() => {
+    BackHandler.exitApp() 
+    return true;
+  }
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackButtonClick);
+    };
+  }, []);
 
   useEffect(()=>{
         if(error){
@@ -166,6 +180,7 @@ const AuthScreen = (props) => {
 export const screenOptions = (navData) => {
   return {
     headerTitle: "Authenticated",
+    headerLeft: null
   };
 };
 
