@@ -49,16 +49,6 @@ export const ProductNavigator = () => {
   return (
     <ProdutStackNavigator.Navigator screenOptions={defaultNvOptions}>
       <ProdutStackNavigator.Screen
-        name="StartupScreen"
-        component={StartupScreen}
-        //options={ProductOptions}
-      />
-      <ProdutStackNavigator.Screen
-        name="AuthNavigator"
-        component={AuthNavigator}
-        options={OptionsAuthScreen}
-      />
-      <ProdutStackNavigator.Screen
         name="ProductOverview"
         component={ProductOverViewScreen}
         options={ProductOptions}
@@ -123,7 +113,7 @@ export const ShopNavigation = () => {
               color={Colors.primary}
               onPress={() => {
                 dispatch(authaction.Logout());
-                props.navigation.navigate("AuthNavigator");
+                //props.navigation.navigate("AuthNavigator");
               }}
             />
           </SafeAreaView>
@@ -191,10 +181,3 @@ export const AuthNavigator = () => {
   );
 };
 
-export default ShopNavigator = () => {
-  return (
-    <NavigationContainer>
-      <ShopNavigation />
-    </NavigationContainer>
-  );
-};

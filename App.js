@@ -5,11 +5,13 @@ import ProductReducer from './store/reducer/products'
 import authReducer from './store/reducer/auth'
 import CartReducer from './store/reducer/cart'
 import OrderReducer from './store/reducer/orders'
-import ShopNavigator from './navigation/ShopNavigator'
-//import AppNavigator from './navigation/AppNavigator'
+import AppNavigator from './navigation/AppNavigator'
 import {AppLoading} from 'expo'
 import * as Font from 'expo-font'
 import ReduxThunk from 'redux-thunk'
+
+console.disableYellowBox = true;
+console.ignoredYellowBox = ['Setting a timer'];
 
 const rootReducer = combineReducers({
     products:ProductReducer,
@@ -36,7 +38,7 @@ export default function App() {
    } 
   return (
     <Provider store={store}>
-       <ShopNavigator />
+       <AppNavigator />
     </Provider>
   );
 }

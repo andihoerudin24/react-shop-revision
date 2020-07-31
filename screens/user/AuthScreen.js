@@ -11,7 +11,6 @@ import {
   Alert,
   BackHandler
 } from "react-native";
-import { useAndroidBackHandler } from "react-navigation-backhandler";
 import { useDispatch } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
 import Input from "../../components/UI/input";
@@ -98,8 +97,6 @@ const AuthScreen = (props) => {
     setIsloading(true);
     try{
       await dispatch(action);
-      props.navigation.navigate("ProductOverview");
-      //console.log('sukses')
     }catch (err){
       setError(err.message)
     }
