@@ -67,5 +67,23 @@ export const addOrder = (cartItem, totalAmount) => {
         date: date,
       },
     });
+
+    for(const cartItems of cartItem){
+       const pushToken = cartItems.productPushToken
+       fetch('https://exp.host/--/api/v2/push/send',{
+        method:'POST',
+        headers:{
+          Accept:'application/json',
+          'Accept-Encoding': 'gzip,deflate',
+          'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({
+          to:pushToken,
+          title:'order was placed',
+          body:cartItem.productTitle
+        })
+       })
+    }
+    
   };
 };

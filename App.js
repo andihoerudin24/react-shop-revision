@@ -9,9 +9,18 @@ import AppNavigator from './navigation/AppNavigator'
 import {AppLoading} from 'expo'
 import * as Font from 'expo-font'
 import ReduxThunk from 'redux-thunk'
+import * as  Notivications from 'expo-notifications'
 
 console.disableYellowBox = true;
 console.ignoredYellowBox = ['Setting a timer'];
+
+Notivications.setNotificationHandler({
+  handleNotification:async () =>{
+    return {
+      shouldShowAlert:true
+    }
+  }
+})
 
 const rootReducer = combineReducers({
     products:ProductReducer,
